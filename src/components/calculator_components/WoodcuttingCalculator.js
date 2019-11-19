@@ -7,42 +7,49 @@ const base_working_timers = [
   {
     level: 1,
     timer: 50,
+    exp: 15,
     label: "Level 1",
     name_type: "Isri",
   },
   {
     level: 15,
     timer: 75,
+    exp: 22,
     label: "Level 15",
     name_type: "Lemo",
   },
   {
     level: 25,
     timer: 100,
+    exp: 30,
     label: "Level 25",
     name_type: "Unera"
   },
   {
     level: 40,
     timer: 180,
+    exp: 65,
     label: "Level 40",
     name_type: "Avinin",
   },
   {
     level: 55,
     timer: 330,
+    exp: 130,
     label: "Level 55",
     name_type: "Aloria",
   },
   {
     level: 75,
     timer: 700,
+    exp: 275,
     label: "Level 75",
     name_type: "Khaya",
   },
   {
     level: 100,
     timer: 1000,
+    exp: 400,
     label: "Level 100",
     name_type: "Ammon",
   },
@@ -112,6 +119,7 @@ export default class WoodcuttingCalculator extends React.Component {
     this.state = {
       tool_reduction: 100,
       forest_level: 1,
+      action_exp: 15,
       base_forest_timer: 50,
       player_level: 1,
     };
@@ -124,6 +132,7 @@ export default class WoodcuttingCalculator extends React.Component {
     this.setState({
       base_forest_timer: event.target.value,
       forest_level: base_working_timers.find((element) => {return element.timer == event.target.value}).level,
+      action_exp: base_working_timers.find((element) => {return element.timer == event.target.value}).exp,
     });
   }
 
@@ -147,7 +156,8 @@ export default class WoodcuttingCalculator extends React.Component {
     return base_working_timers[index].name_type;
   }
   render() {
-    console.log(this.state);
+    const timer = calculate_woodcutting_timer(this.state.base_forest_timer, Number(this.state.tool_reduction), this.state.player_level);
+    const hourly_exp = Math.ceil(3600*this.state.action_exp/timer);
     return (
       <div className="calculator">
         <Grid container spacing={5}>
@@ -195,7 +205,7 @@ export default class WoodcuttingCalculator extends React.Component {
           </Grid>
         </Grid>
         <div className="timer">
-          {this.state.forest_level <= this.state.player_level ? "Base timer : " + calculate_woodcutting_timer(this.state.base_forest_timer, Number(this.state.tool_reduction), this.state.player_level) : "You probably can't chop here yet."}
+          {this.state.forest_level <= this.state.player_level ? "Base timer : " + timer + " (about " + hourly_exp + " experience per hour)" : "You probably can't chop here yet."}
         </div>
       </div>
     )
