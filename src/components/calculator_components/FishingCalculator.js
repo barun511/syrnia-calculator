@@ -1,129 +1,93 @@
 import React from 'react';
 import {FormControl, Grid, InputLabel, MenuItem, Paper, TextField, Select, Slider} from '@material-ui/core';
 import './calculator.scss';
-import calculate_woodcutting_timer from './../../calculator_utils/woodcutting_utils';
-
+import calculate_fishing_timer from './../../calculator_utils/fishing_utils';
+// [W] 23:18 Mr Tiddles[CFH]: mariners locker is 350, depths is 550
 const base_working_timers = [
   {
     level: 1,
-    timer: 50,
-    label: "Level 1",
-    name_type: "Isri",
+    timer: 65,
+    computeMinTimer: () => {return 29},
+    label: "Net Fishing",
+    name_type: "Net",
   },
   {
-    level: 15,
-    timer: 75,
-    label: "Level 15",
-    name_type: "Lemo",
+    level: 5,
+    timer: 61,
+    computeMinTimer: () => {return 29},
+    label: "Rod Fishing",
+    name_type: "Rod",
   },
   {
-    level: 25,
-    timer: 100,
-    label: "Level 25",
-    name_type: "Unera"
+    level: 23,
+    timer: 117,
+    computeMinTimer: () => {return 29},
+    label: "SFB Fishing",
+    name_type: "Small fishing boat"
   },
   {
-    level: 40,
-    timer: 180,
-    label: "Level 40",
-    name_type: "Avinin",
+    level: 35,
+    timer: 150,
+    label: "Sloop fishing",
+    computeMinTimer: () => {return 29},
+    name_type: "Sloop",
   },
   {
-    level: 55,
-    timer: 330,
-    label: "Level 55",
-    name_type: "Aloria",
+    level: 46,
+    timer: 249,
+    label: "Boat fishing",
+    computeMinTimer: () => {return 29},
+    name_type: "Boat",
   },
   {
-    level: 75,
-    timer: 700,
-    label: "Level 75",
-    name_type: "Khaya",
+    level: 50,
+    timer: 450, //  $minTime = 90 - ($fishingl >= 170 ? $fishingl - 170 : 0);
+    computeMinTimer: (level => {
+      return level > 170? Math.max(90 - level + 170 , 44) : 90;
+    }),
+    label: "Trawler fishing",
+    name_type: "Trawler",
   },
   {
     level: 100,
-    timer: 1000,
-    label: "Level 100",
-    name_type: "Ammon",
+    timer: 900,
+    label: "Canoe fishing",
+    computeMinTimer: () => {return 59},
+    name_type: "Canoe",
   },
 ];
 
 const working_tools = [
   {
-    name: "Bronze Hatchet",
-    reduction: 100,
-    durability: 900,
+    reduction: 1.00,
+    name: "Rod/Net/Tinsel Net"
   },
   {
-    name: "Iron Hatchet",
-    reduction: 98,
-    durability: 1000,
+    reduction: 0.95,
+    name: "Bone Fishing Rod"
   },
-  {
-    name: "Steel Hatchet (Ogre Hatchet, Lizard Machete)",
-    reduction: 96,
-    durability: 1250,
-  },
-  {
-    name: "Elven Hatchet",
-    reduction: 94,
-    durability: 1500,
-  },
-  {
-    name: "Silver Hatchet",
-    reduction: 92,
-    durability: 2000,
-  },
-  {
-    name: "Gold Hatchet",
-    reduction: 90,
-    durability: 2250,
-  },
-  {
-    name: "Platina Hatchet",
-    reduction: 86,
-    durability: 2500,
-  },
-  {
-    name: "Bone Hatchet",
-    reduction: 84,
-    durability: 10000,
-  },
-  {
-    name: "Syriet Hatchet",
-    reduction: 83,
-    durability: 2750,
-  },
-  {
-    name: "Obsidian Hatchet",
-    reduction: 81,
-    durability: 3000,
-  },
-  {
-    name: "Puranium Hatchet",
-    reduction: 78,
-    durability: 3500,
-  }
 ];
 
 export default class WoodcuttingCalculator extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tool_reduction: 100,
-      forest_level: 1,
-      base_forest_timer: 50,
+      tool_reduction: 1.00,
+      fishing_level: 1,
+      base_fishing_timer: 65,
       player_level: 1,
+      compute_min_timer: () => {return 29},
     };
-    this.handleForestChange = this.handleForestChange.bind(this);
+    this.handleFishingChange = this.handleFishingChange.bind(this);
     this.handleToolChange = this.handleToolChange.bind(this);
     this.handleLevelChange = this.handleLevelChange.bind(this);
   }
 
-  handleForestChange(event) {
+  handleFishingChange(event) {
     this.setState({
-      base_forest_timer: event.target.value,
-      forest_level: base_working_timers.find((element) => {return element.timer == event.target.value}).level,
+      base_fishing_timer: event.target.value,
+      fishing_level: base_working_timers.find((element) => {return element.timer == event.target.value}).level,
+      compute_min_timer:  base_working_timers.find((element) => {return element.timer == event.target.value}).computeMinTimer,
     });
   }
 
@@ -153,12 +117,12 @@ export default class WoodcuttingCalculator extends React.Component {
         <Grid container spacing={5}>
           <Grid item md={4}>
           <FormControl>
-            <InputLabel id="forest-label">Forest</InputLabel>
+            <InputLabel id="fishing-label">Fishing</InputLabel>
             <Select
-              labelId="forest-label"
-              value={this.state.base_forest_timer}
+              labelId="fishing-label"
+              value={this.state.base_fishing_timer}
               name="Forest"
-              onChange={this.handleForestChange}
+              onChange={this.handleFishingChange}
             >
               {
                 base_working_timers.map((element, index) => {
@@ -195,7 +159,7 @@ export default class WoodcuttingCalculator extends React.Component {
           </Grid>
         </Grid>
         <div className="timer">
-          {this.state.forest_level <= this.state.player_level ? "Base timer : " + calculate_woodcutting_timer(this.state.base_forest_timer, Number(this.state.tool_reduction), this.state.player_level) : "You probably can't chop here yet."}
+          {this.state.fishing_level <= this.state.player_level ? "Base timer : " + calculate_fishing_timer(this.state.base_fishing_timer, Number(this.state.tool_reduction) , this.state.player_level, this.state.compute_min_timer(this.state.player_level)) : "You probably can't fish here yet."}
         </div>
       </div>
     )
