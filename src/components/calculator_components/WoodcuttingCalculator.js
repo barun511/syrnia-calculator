@@ -157,7 +157,7 @@ export default class WoodcuttingCalculator extends React.Component {
   }
   render() {
     const timer = calculate_woodcutting_timer(this.state.base_forest_timer, Number(this.state.tool_reduction), this.state.player_level);
-    const hourly_exp = Math.ceil(3600*this.state.action_exp/timer);
+    const hourly_exp = Math.ceil(3600*this.state.action_exp/(timer+1));
     return (
       <div className="calculator">
         <Grid container spacing={5}>
