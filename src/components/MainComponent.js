@@ -2,6 +2,7 @@ import React from 'react';
 import {AppBar, Container, CssBaseline, Tabs, Tab, Typography, Box} from '@material-ui/core';
 import WoodcuttingCalculator from './calculator_components/WoodcuttingCalculator';
 import FishingCalculator from './calculator_components/FishingCalculator';
+import CombatLevelCalculator from './calculator_components/CombatLevelCalculator';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -42,6 +43,7 @@ export default class MainComponent extends React.Component {
           <Tabs value={this.state.selectedValue} onChange={this.handleChange}>
           <Tab label="Woodcutting Timer Calculator"/>
           <Tab label="Fishing Timer Calculator"/>
+          <Tab label="Combat Level Calculator"/>
           </Tabs>
         </AppBar>
         <TabPanel value={this.state.selectedValue} index={0}>
@@ -49,6 +51,9 @@ export default class MainComponent extends React.Component {
         </TabPanel>
         <TabPanel value={this.state.selectedValue} index={1}>
           <FishingCalculator />
+        </TabPanel>
+        <TabPanel value={this.state.selectedValue} index={2}>
+          <CombatLevelCalculator />
         </TabPanel>
       </div>
     )
