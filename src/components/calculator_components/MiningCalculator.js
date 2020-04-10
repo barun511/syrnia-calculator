@@ -1,99 +1,168 @@
 import React from 'react';
 import {FormControl, Grid, InputLabel, MenuItem, Paper, TextField, Select, Slider} from '@material-ui/core';
 import './calculator.scss';
-import calculate_fishing_timer from './../../calculator_utils/fishing_utils';
-// [W] 23:18 Mr Tiddles[CFH]: mariners locker is 350, depths is 550
+import calculate_mining_timer from './../../calculator_utils/mining_utils';
+
 const base_working_timers = [
   {
     level: 1,
-    timer: 65,
-    computeMinTimer: () => {return 29},
-    label: "Net Fishing",
-    name_type: "Net",
+    timer: 60,
+    exp: 15,
+    label: "Tin Ore",
+    name_type: "Tin Ore",
   },
   {
-    level: 5,
-    timer: 61,
-    computeMinTimer: () => {return 29},
-    label: "Rod Fishing",
-    name_type: "Rod",
+    level: 10,
+    timer: 80,
+    exp: 22,
+    label: "Iron Ore",
+    name_type: "Iron Ore",
   },
   {
-    level: 23,
-    timer: 117,
-    computeMinTimer: () => {return 29},
-    label: "SFB Fishing",
-    name_type: "Small fishing boat"
+    level: 25,
+    timer: 100,
+    exp: 37,
+    label: "Coal",
+    name_type: "Coal"
   },
   {
-    level: 35,
-    timer: 150,
-    label: "Sloop fishing",
-    computeMinTimer: () => {return 29},
-    name_type: "Sloop",
+    level: 40,
+    timer: 135,
+    exp: 60,
+    label: "Silver",
+    name_type: "Silver",
   },
   {
-    level: 46,
-    timer: 249,
-    label: "Boat fishing",
-    computeMinTimer: () => {return 29},
-    name_type: "Boat",
+    level: 55,
+    timer: 330,
+    exp: 155,
+    label: "Gold ore",
+    name_type: "Gold ore",
   },
   {
-    level: 50,
-    timer: 450, //  $minTime = 90 - ($fishingl >= 170 ? $fishingl - 170 : 0);
-    computeMinTimer: (level => {
-      return level > 170? Math.max(90 - level + 170 , 44) : 90;
-    }),
-    label: "Trawler fishing",
-    name_type: "Trawler",
+    level: 70,
+    timer: 600,
+    throttle_level: 170,
+    throttle_timer: 90,
+    min_timer: 29,
+    exp: 310,
+    label: "Platina ore",
+    name_type: "Platina ore",
+  },
+  {
+    level: 70,
+    timer: 600,
+    throttle_level: 170,
+    throttle_timer: 90,
+    min_timer: 29,
+    abydos: true,
+    exp: 310,
+    label: "Platina ore (Abydos)",
+    name_type: "Platina ore (Abydos)",
+  },
+  {
+    level: 85,
+    timer: 800,
+    exp: 1000,
+    throttle_level: 190,
+    throttle_timer: 100,
+    min_timer: 29,
+    label: "Syriet ore",
+    name_type: "Syriet ore",
   },
   {
     level: 100,
-    timer: 900,
-    label: "Canoe fishing",
-    computeMinTimer: () => {return 59},
-    name_type: "Canoe",
-  },
+    timer: 1500,
+    exp: 3000,
+    min_timer: 59,
+    throttle_level: 257,
+    throttle_timer: 90,
+    label: "Obsidian ore", 
+    name_type: "Obsidian ore",
+  }
 ];
 
 const working_tools = [
   {
-    reduction: 1.00,
-    name: "Rod/Net/Tinsel Net"
+    name: "Bronze pickaxe",
+    reduction: 100,
+    durability: 750,
   },
   {
-    reduction: 0.95,
-    name: "Bone Fishing Rod"
+    name: "Iron pickaxe",
+    reduction: 97,
+    durability: 1000,
   },
+  {
+    name: "Steel pickaxe (Ogre pickaxe)",
+    reduction: 94,
+    durability: 1000,
+  },
+  {
+    name: "Elven pickaxe",
+    reduction: 89,
+    durability: 1000,
+  },
+  {
+    name: "Silver pickaxe",
+    reduction: 89,
+    durability: 1500,
+  },
+  {
+    name: "Gold pickaxe",
+    reduction: 85,
+    durability: 1750,
+  },
+  {
+    name: "Platina pickaxe",
+    reduction: 83,
+    durability: 2500,
+  },
+  {
+    name: "Bone pickaxe",
+    reduction: 81,
+    durability: 10000,
+  },
+  {
+    name: "Syriet pickaxe",
+    reduction: 80,
+    durability: 2750,
+  },
+  {
+    name: "Obsidian pickaxe",
+    reduction: 78,
+    durability: 3000,
+  },
+  {
+    name: "Puranium pickaxe",
+    reduction: 75,
+    durability: 3500,
+  }
 ];
 
-export default class WoodcuttingCalculator extends React.Component {
+export default class MiningCalculator extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tool_reduction: 1.00,
-      mining_level: 1,
-      base_mining_timer: 65,
+      ore_index: 0,
+      tool_index: 0,
       player_level: 1,
-      compute_min_timer: () => {return 29},
     };
-    this.handleFishingChange = this.handleFishingChange.bind(this);
+    this.handleMineChange = this.handleMineChange.bind(this);
     this.handleToolChange = this.handleToolChange.bind(this);
     this.handleLevelChange = this.handleLevelChange.bind(this);
   }
 
-  handleFishingChange(event) {
+  handleMineChange(event) {
+    console.log(event.target.value);
     this.setState({
-      base_mining_timer: event.target.value,
-      mining_level: base_working_timers.find((element) => {return element.timer == event.target.value}).level,
-      compute_min_timer:  base_working_timers.find((element) => {return element.timer == event.target.value}).computeMinTimer,
+      ore_index: event.target.value,
     });
   }
 
   handleToolChange(event) {
     this.setState({
-      tool_reduction: event.target.value,
+      tool_index: event.target.value,
     });
   }
 
@@ -111,22 +180,23 @@ export default class WoodcuttingCalculator extends React.Component {
     return base_working_timers[index].name_type;
   }
   render() {
-    console.log(this.state);
+    const timer = calculate_mining_timer(this.state.ore_index, this.state.tool_index, this.state.player_level, base_working_timers, working_tools);
+    const hourly_exp = Math.ceil(3600*base_working_timers[this.state.ore_index].exp/(timer+1));
     return (
       <div className="calculator">
         <Grid container spacing={5}>
           <Grid item md={4}>
           <FormControl>
-            <InputLabel id="fishing-label">Fishing</InputLabel>
+            <InputLabel id="mining-label">Ore</InputLabel>
             <Select
-              labelId="fishing-label"
-              value={this.state.base_mining_timer}
-              name="Forest"
-              onChange={this.handleFishingChange}
+              labelId="mining-label"
+              value={this.state.ore_index}
+              name="Ore"
+              onChange={this.handleMineChange}
             >
               {
                 base_working_timers.map((element, index) => {
-                  return <MenuItem key={index} value={element.timer}>{element.label}</MenuItem>
+                  return <MenuItem key={index} value={index}>{element.label}</MenuItem>
                 })
               }
             </Select>
@@ -137,13 +207,13 @@ export default class WoodcuttingCalculator extends React.Component {
             <InputLabel id="tool-label">Working Tool</InputLabel>
             <Select
              labelId="tool-label"
-             value={this.state.tool_reduction}
+             value={this.state.tool_index}
              name="Working Tool"
              onChange={this.handleToolChange}
             >
             {
               working_tools.map((element, index) => {
-                return <MenuItem key={index} value={element.reduction}>{element.name}</MenuItem>
+                return <MenuItem key={index} value={index}>{element.name}</MenuItem>
               })
             }
             </Select>
@@ -159,7 +229,7 @@ export default class WoodcuttingCalculator extends React.Component {
           </Grid>
         </Grid>
         <div className="timer">
-          {this.state.mining_level <= this.state.player_level ? "Base timer : " + calculate_fishing_timer(this.state.base_mining_timer, Number(this.state.tool_reduction) , this.state.player_level, this.state.compute_min_timer(this.state.player_level)) : "You probably can't fish here yet."}
+          {base_working_timers[this.state.ore_index].level <= this.state.player_level ? "Base timer : " + timer + " (about " + hourly_exp + " experience per hour)" : "You probably can't mine here yet."}
         </div>
       </div>
     )

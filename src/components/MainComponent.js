@@ -3,6 +3,7 @@ import {AppBar, Container, CssBaseline, Tabs, Tab, Typography, Box} from '@mater
 import WoodcuttingCalculator from './calculator_components/WoodcuttingCalculator';
 import FishingCalculator from './calculator_components/FishingCalculator';
 import CombatLevelCalculator from './calculator_components/CombatLevelCalculator';
+import MiningCalculator from './calculator_components/MiningCalculator';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -25,7 +26,7 @@ export default class MainComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedValue: 0,
+      selectedValue: 2,
     };
   }
 
@@ -43,6 +44,7 @@ export default class MainComponent extends React.Component {
           <Tabs value={this.state.selectedValue} onChange={this.handleChange}>
           <Tab label="Woodcutting Timer Calculator"/>
           <Tab label="Fishing Timer Calculator"/>
+          <Tab label="Mining Timer Calculator" />
           <Tab label="Combat Level Calculator"/>
           </Tabs>
         </AppBar>
@@ -53,6 +55,9 @@ export default class MainComponent extends React.Component {
           <FishingCalculator />
         </TabPanel>
         <TabPanel value={this.state.selectedValue} index={2}>
+          <MiningCalculator />
+        </TabPanel>
+        <TabPanel value={this.state.selectedValue} index={3}>
           <CombatLevelCalculator />
         </TabPanel>
       </div>

@@ -111,7 +111,6 @@ export default class WoodcuttingCalculator extends React.Component {
     return base_working_timers[index].name_type;
   }
   render() {
-    console.log(this.state);
     return (
       <div className="calculator">
         <Grid container spacing={5}>
