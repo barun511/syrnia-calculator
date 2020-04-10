@@ -79,6 +79,16 @@ const base_working_timers = [
     throttle_timer: 90,
     label: "Obsidian ore", 
     name_type: "Obsidian ore",
+  },
+  {
+    level: 120,
+    timer: 2000,
+    exp: 5000,
+    min_timer: 74,
+    throttle_level: 257,
+    throttle_timer: 90,
+    label: "Puranium ore",
+    name_type: "Puranium ore",
   }
 ];
 
@@ -229,7 +239,7 @@ export default class MiningCalculator extends React.Component {
           </Grid>
         </Grid>
         <div className="timer">
-          {base_working_timers[this.state.ore_index].level <= this.state.player_level ? "Base timer : " + timer + " (about " + hourly_exp + " experience per hour)" : "You probably can't mine here yet."}
+          {base_working_timers[this.state.ore_index].level <= this.state.player_level ? "Base timer : " + timer + " (about " + hourly_exp + " experience per hour)" : "You probably can't mine this ore yet."}
         </div>
       </div>
     )
