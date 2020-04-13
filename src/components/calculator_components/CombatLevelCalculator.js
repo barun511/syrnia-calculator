@@ -57,7 +57,7 @@ export default class CombatLevelCalculator extends React.Component {
         </Grid>
       </Grid>
       <div className="timer">
-        Your combat level : {Math.floor((this.state.attack_level + this.state.strength_level + this.state.defence_level)/3) + Math.floor(this.state.health_level/5)}
+        Your combat level : {Math.floor((this.state.attack_level + this.state.strength_level + this.state.defence_level)/3 + this.state.health_level/5)}
       </div>
       </div>
     )
