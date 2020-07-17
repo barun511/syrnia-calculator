@@ -5,3 +5,18 @@
 .timer {
   padding: 100px;
 }
+
+.average-hit-calculator {
+  display: flex;
+  flex-direction: column;
+}
+
+.average-hit-calculator .player-stats-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.average-hit-calculator .player-stats {
+  padding: 30px;
+}

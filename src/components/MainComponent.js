@@ -4,6 +4,8 @@ import WoodcuttingCalculator from './calculator_components/WoodcuttingCalculator
 import FishingCalculator from './calculator_components/FishingCalculator';
 import CombatLevelCalculator from './calculator_components/CombatLevelCalculator';
 import MiningCalculator from './calculator_components/MiningCalculator';
+import './calculator_components/calculator.scss';
+import AverageHitCalculator from './calculator_components/AverageHitCalculator';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -46,7 +48,8 @@ export default class MainComponent extends React.Component {
           <Tab label="Fishing Timer Calculator"/>
           <Tab label="Mining Timer Calculator" />
           <Tab label="Combat Level Calculator"/>
-          </Tabs>
+          <Tab label="Average Hit Calculator" />
+        </Tabs>
         </AppBar>
         <TabPanel value={this.state.selectedValue} index={0}>
           <WoodcuttingCalculator />
@@ -60,6 +63,9 @@ export default class MainComponent extends React.Component {
         <TabPanel value={this.state.selectedValue} index={3}>
           <CombatLevelCalculator />
         </TabPanel>
+        <TabPanel value={this.state.selectedValue} index={4}>
+          <AverageHitCalculator />
+        </TabPanel> 
       </div>
     )
   }
